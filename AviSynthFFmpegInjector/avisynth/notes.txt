@@ -1,0 +1,31 @@
+ 
+ D:\Dev\GitHub\AviSynthFakeFFmpegInjector\AviSynthFFmpegInjector\Build\VS\x64\Debug\ffmpeg_g.exe
+
+ -i "SCRIPT.avs" -c:v libx264 -crf 24 -c:a libmp3lame -aq 2 OUT.mp4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ffmpeg -v info  -f lavfi -i "testsrc=duration=40:size=1920x1080:rate=25"   -vcodec h264_nvenc -preset fast test_nvenc.mp4
+ -> 127 fps
+
+ ffmpeg -v info  -f lavfi -i "testsrc=duration=40:size=1920x1080:rate=25"   -vcodec libx264 -preset fast test_libx264.mp4
+ -> 75 fps
+
+ ffmpeg -v info  -f lavfi -i "testsrc=duration=40:size=1920x1080:rate=25"   -c:v h264_nvenc -rc constqp -preset hq test_nvenc.mp4
+ -> 127 fps
+
+
+  -v info -i "SCRIPT.avs" -aspect 16:9 -c:v libx264 -rc constqp -preset hq OUT.mp4

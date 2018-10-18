@@ -19,6 +19,12 @@
     <Filter Include="Source Files\external">
       <UniqueIdentifier>{345bce94-bb7d-48ee-9f23-e8330548ad79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\com">
+      <UniqueIdentifier>{6c706cd7-2d68-4496-80c6-a8c2c62545f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\com">
+      <UniqueIdentifier>{c880e26b-65f9-4d5c-9e91-f0076cf5dad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -39,6 +45,12 @@
     <ClInclude Include="avisynth_c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sharedmemstructures.h">
+      <Filter>Header Files\com</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedMemHelper.h">
+      <Filter>Header Files\com</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -56,5 +68,12 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SharedMemHelper.cpp">
+      <Filter>Source Files\com</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="notes.txt" />
+    <Text Include="notes2.txt" />
   </ItemGroup>
 </Project>

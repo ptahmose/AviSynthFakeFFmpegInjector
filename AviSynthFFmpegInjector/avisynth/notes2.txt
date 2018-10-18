@@ -1,0 +1,17 @@
+
+
+GUID magic
+int pixeltype
+uint width
+uint height
+uint stride
+uint fps_numerator
+uint fps_denominator
+
+uint numFrames
+
+uint8_t numBuffers;
+
+uint32_t bufferState[8]
+
+uint32_t buffersOffsets[8]
