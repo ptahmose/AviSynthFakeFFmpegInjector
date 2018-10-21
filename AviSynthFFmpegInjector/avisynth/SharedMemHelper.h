@@ -55,6 +55,12 @@ public:
 
 		return false;
 	}
+
+	const void* GetLockedFramePointer(const FrameLockInfo& lockInfo)
+	{
+		const void* ptr = ((const char*)this->hdr) + this->hdr->videoBufferInfo.offset[lockInfo.frameNo];
+		return ptr;
+	}
 	
 	void FreeLockedFrame(const FrameLockInfo& lockInfo)
 	{

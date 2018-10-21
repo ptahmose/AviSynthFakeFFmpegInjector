@@ -26,9 +26,12 @@ struct AVS_VideoFrameEx :AVS_VideoFrame
 	int pixeltype;
 	int width, height;
 	FrameLockInfo lockInfo;
+
+	// TODO: use a shared_ptr
 	AVS_Clip* clip;
 };
 
+/*
 static uint8_t val=0;
 static int c = 0;
 void __cdecl avs_bit_blt(AVS_ScriptEnvironment *, AVSI_BYTE* dstp, int dst_pitch, const AVSI_BYTE* srcp, int src_pitch, int row_size, int height)
@@ -63,6 +66,26 @@ void __cdecl avs_bit_blt(AVS_ScriptEnvironment *, AVSI_BYTE* dstp, int dst_pitch
 
 	c = c + 1;
 	c = c % 3;
+}
+*/
+void __cdecl avs_bit_blt(AVS_ScriptEnvironment *, AVSI_BYTE* dstp, int dst_pitch, const AVSI_BYTE* srcp, int src_pitch, int row_size, int height)
+{
+	// avisynth.c line 681-685 has the habit of vertically flipping the image for RGB24/RGB32.
+	// We compensate for this here.
+
+	if (src_pitch < 0)
+	{
+		srcp += (height - 1)*src_pitch;
+
+		src_pitch = -src_pitch;
+	}
+
+	for (int i = 0; i < height; ++i)
+	{
+		memcpy(dstp, srcp, row_size);
+		dstp += dst_pitch;
+		srcp += src_pitch;
+	}
 }
 
 const char * avs_clip_get_error(AVS_Clip *) // return 0 if no error
@@ -128,7 +151,7 @@ const AVS_VideoInfo* avs_get_video_info(AVS_Clip * avsClip)
 	avsClip->videoInfo.fps_denominator = 1;
 	avsClip->videoInfo.pixel_type = AVS_CS_BGR24;
 	avsClip->videoInfo.audio_samples_per_second = 0;
-	avsClip->videoInfo.num_frames = 1000;
+	avsClip->videoInfo.num_frames = 1000*10;
 	return &avsClip->videoInfo;
 }
 
@@ -247,7 +270,7 @@ int avs_bits_per_pixel(const AVS_VideoInfo * p)
 	switch (p->pixel_type)
 	{
 	case AVS_CS_BGR24:
-		return 3*8;
+		return 3 * 8;
 	default:
 		// TODO: proper error-handling
 		return -1;
@@ -265,7 +288,9 @@ int avs_get_height_p(const AVS_VideoFrame * p, int plane)
 	});
 
 	AVS_VideoFrameEx* videoFrame = (AVS_VideoFrameEx*)p;
-	return videoFrame->height;
+	auto videoInfo = videoFrame->clip->smHlp->GetVideoInfo();
+	return videoInfo.height;
+	//return videoFrame->height;
 
 }
 
@@ -280,12 +305,16 @@ int avs_get_pitch_p(const AVS_VideoFrame * p, int plane)
 	});
 
 	AVS_VideoFrameEx* videoFrame = (AVS_VideoFrameEx*)p;
-	return videoFrame->pitch;
+	auto videoInfo = videoFrame->clip->smHlp->GetVideoInfo();
+	return videoInfo.stride;
+	//return videoFrame->pitch;
 }
 
 const BYTE * avs_get_read_ptr_p(const AVS_VideoFrame * p, int plane)
 {
-	return nullptr;
+	AVS_VideoFrameEx* videoFrame = (AVS_VideoFrameEx*)p;
+	auto ptr = (const BYTE *)(videoFrame->clip->smHlp->GetLockedFramePointer(videoFrame->lockInfo));
+	return ptr;
 }
 
 int avs_get_row_size_p(const AVS_VideoFrame * p, int plane)
@@ -299,7 +328,13 @@ int avs_get_row_size_p(const AVS_VideoFrame * p, int plane)
 	});
 
 	AVS_VideoFrameEx* videoFrame = (AVS_VideoFrameEx*)p;
-	return videoFrame->width*3;
+
+	auto videoInfo = videoFrame->clip->smHlp->GetVideoInfo();
+
+	// TODO
+	return videoInfo.width * 3;
+
+	//return videoFrame->width*3;
 }
 
 int avs_is_planar_rgb(const AVS_VideoInfo * p)

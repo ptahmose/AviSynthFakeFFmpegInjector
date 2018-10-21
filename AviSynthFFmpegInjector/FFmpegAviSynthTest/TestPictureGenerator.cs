@@ -27,9 +27,11 @@ namespace FFmpegAviSynthTest
             {
                 g.Clear(Color.Chartreuse);
 
-                Font f = new Font("Arial", 10.0f, FontStyle.Bold, GraphicsUnit.Point);
+                Font f = new Font("Arial", 80.0f, FontStyle.Bold, GraphicsUnit.Point);
                 g.DrawString($"#{this.count}", f, Brushes.Black, 100, 10);
             }
+
+            this.count++;
         }
 
         public void GetBitmap(Action<IntPtr, int, int, int> action)

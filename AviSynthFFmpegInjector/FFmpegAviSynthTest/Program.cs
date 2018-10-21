@@ -1,5 +1,6 @@
 ﻿namespace FFmpegAviSynthTest
 {
+    using System;
     using System.Diagnostics;
 
     using FFmpegAviSynthTest.SharedMem;
@@ -37,6 +38,7 @@
 
             var bitmapGenerator = new TestPictureGenerator(videoInfo.Width, videoInfo.Height);
 
+            int i=0;
             for (; ; )
             {
                 bitmapGenerator.GenerateNext();
@@ -53,6 +55,8 @@
                                 }
                             }
                         });
+                Console.WriteLine($"Put frame #{i}");
+                ++i;
             }
 
         }
