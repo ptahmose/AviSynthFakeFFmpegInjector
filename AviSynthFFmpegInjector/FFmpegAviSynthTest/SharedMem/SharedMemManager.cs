@@ -6,6 +6,7 @@ namespace FFmpegAviSynthTest.SharedMem
     using System.Collections.Generic;
     using System.IO.MemoryMappedFiles;
     using System.Linq;
+    using System.Threading;
 
     public partial class SharedMemManager
     {
@@ -55,6 +56,57 @@ namespace FFmpegAviSynthTest.SharedMem
             this.viewAccessor = viewAccessor;
         }
 
+        public unsafe bool TryAddFrame(IntPtr ptr, int width, int height, int stride)
+        {
+            // try to lock next free frame
+            byte* sharedMemHdr = null;
+            this.viewAccessor.SafeMemoryMappedViewHandle.AcquirePointer(ref sharedMemHdr);
+
+            try
+            {
+                ref int state = ref this.GetBufferStateAtWritePointer(sharedMemHdr);
+
+                if (Interlocked.CompareExchange(ref state, BufferState_InUse, BufferState_Free) == BufferState_Free)
+                {
+                    this.CopyToBitmapAtWritePointer(sharedMemHdr, ptr, width, height, stride);
+                    state = BufferState_Filled;
+                    this.IncrementWritePtr(sharedMemHdr);
+                    return true;
+                }
+
+                return false;
+            }
+            finally
+            {
+                this.viewAccessor.SafeMemoryMappedViewHandle.ReleasePointer();
+            }
+        }
+
+        private unsafe ref int GetBufferStateAtWritePointer(byte* ptr)
+        {
+            SharedMemHdr* hdr = (SharedMemHdr*)ptr;
+            return ref hdr->videoBufferState.bufferStates[hdr->videoBufferState.writePtr];
+        }
+
+        private unsafe  void IncrementWritePtr(byte* ptr)
+        {
+            SharedMemHdr* hdr = (SharedMemHdr*)ptr;
+            int wp = hdr->videoBufferState.writePtr + 1;
+            if (wp >= hdr->videoBufferInfo.videoBufferCount)
+            {
+                wp = 0;
+            }
+
+            hdr->videoBufferState.writePtr = wp;
+        }
+
+        private unsafe void CopyToBitmapAtWritePointer(byte* sharedMemHdr, IntPtr srcPtr, int width, int height, int stride)
+        {
+            SharedMemHdr* hdr = (SharedMemHdr*)sharedMemHdr;
+            byte* ptrBitmap = sharedMemHdr + hdr->videoBufferInfo.offset[hdr->videoBufferState.writePtr];
+            StridedCopy(srcPtr, stride, new IntPtr(ptrBitmap), (int)hdr->videoInfo.stride, height, (int)Math.Min(stride, hdr->videoInfo.stride));
+        }
+
         private unsafe SharedMemHdr CreateInitialSharedMemHdr()
         {
             var hdr = new SharedMemHdr();
@@ -102,6 +154,24 @@ namespace FFmpegAviSynthTest.SharedMem
         private static uint Align(uint offset, uint alignment)
         {
             return ((offset + alignment - 1) / alignment) * alignment;
+        }
+
+        private static void StridedCopy(IntPtr src, int strideSrc, IntPtr dst, int strideDst, int height, int lineLength)
+        {
+            unsafe
+            {
+                if (strideSrc == strideDst)
+                {
+                    System.Buffer.MemoryCopy(src.ToPointer(), dst.ToPointer(), height * strideSrc, height * strideSrc);
+                }
+                else
+                {
+                    for (int i = 0; i < height; ++i)
+                    {
+                        System.Buffer.MemoryCopy((src + i * strideSrc).ToPointer(), (dst + i * strideDst).ToPointer(), lineLength, lineLength);
+                    }
+                }
+            }
         }
     }
 

@@ -4,6 +4,8 @@
 #include "Utils.h"
 #include <sstream>
 #include "avisynth_c.h"
+#include "SharedMemHelper.h"
+#include "SharedMemManager.h"
 
 using namespace std;
 
@@ -14,6 +16,8 @@ struct AVS_ScriptEnvironment
 
 struct AVS_Clip
 {
+	SharedMemHelperReader* smHlp;
+	SharedMemManager* sharedMemManager;
 	AVS_VideoInfo videoInfo;
 };
 
@@ -21,6 +25,8 @@ struct AVS_VideoFrameEx :AVS_VideoFrame
 {
 	int pixeltype;
 	int width, height;
+	FrameLockInfo lockInfo;
+	AVS_Clip* clip;
 };
 
 static uint8_t val=0;
@@ -126,7 +132,7 @@ const AVS_VideoInfo* avs_get_video_info(AVS_Clip * avsClip)
 	return &avsClip->videoInfo;
 }
 
-AVS_VideoFrame* avs_get_frame(AVS_Clip *, int n)
+AVS_VideoFrame* avs_get_frame(AVS_Clip* clip, int n)
 {
 	Log(LogLevel_Trace,
 		[=](void)->string
@@ -136,10 +142,22 @@ AVS_VideoFrame* avs_get_frame(AVS_Clip *, int n)
 		return ss.str();
 	});
 
+	FrameLockInfo lockInfo;
+	for (;;)
+	{
+		bool b = clip->smHlp->TryLockNextFrame(lockInfo);
+		if (b == true)
+		{
+			break;
+		}
+	}
+
 	AVS_VideoFrameEx* videoFrame = new AVS_VideoFrameEx();
 	videoFrame->pitch = ((1920 * 3 + 3) / 4) * 4;
 	videoFrame->width = 1920;
 	videoFrame->height = 1080;
+	videoFrame->lockInfo = lockInfo;
+	videoFrame->clip = clip;
 	return videoFrame;
 }
 
@@ -194,12 +212,24 @@ void avs_release_video_frame(AVS_VideoFrame* p)
 	});
 
 	AVS_VideoFrameEx* videoFrame = (AVS_VideoFrameEx*)p;
+	videoFrame->clip->smHlp->FreeLockedFrame(videoFrame->lockInfo);
 	delete p;
 }
 
 AVS_Clip * avs_take_clip(AVS_Value, AVS_ScriptEnvironment *)
 {
-	return new AVS_Clip();
+	MessageBoxA(HWND_DESKTOP, "Waiting for Debugger to attach", "Waiting...", MB_OK);
+
+	auto shrdMemManager = new SharedMemManager("SHAREDMEMTEST");
+	shrdMemManager->Initialize();
+	auto shrdMemHlp = new SharedMemHelperReader(shrdMemManager->GetSharedMemHdrPointer());
+
+	auto avsClip = new AVS_Clip();
+	avsClip->sharedMemManager = shrdMemManager;
+	avsClip->smHlp = shrdMemHlp;
+	return avsClip;
+
+	//return new AVS_Clip();
 }
 
 int avs_bits_per_pixel(const AVS_VideoInfo * p)

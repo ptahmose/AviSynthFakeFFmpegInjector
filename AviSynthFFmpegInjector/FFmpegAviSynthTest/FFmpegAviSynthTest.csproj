@@ -38,6 +38,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +53,7 @@
     <Compile Include="SharedMem\SmPixelTypes.cs" />
     <Compile Include="SharedMem\SmVideoInfo.cs" />
     <Compile Include="SharedMem\Utilities.cs" />
+    <Compile Include="TestPictureGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

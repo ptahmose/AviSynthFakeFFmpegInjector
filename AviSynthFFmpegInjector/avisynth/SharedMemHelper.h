@@ -2,6 +2,12 @@
 #include "sharedmemstructures.h"
 #include <stdexcept>
 #include <functional>
+#include <stdexcept>
+
+struct FrameLockInfo
+{
+	int frameNo;
+};
 
 class SharedMemHelperReader
 {
@@ -21,6 +27,50 @@ public:
 		return this->hdr->videoInfo;
 	}
 
+	bool IsNextFrameAvailable()
+	{
+		int curReadPtr = this->hdr->videoBufferState.readPtr;
+		if (InterlockedCompareExchange(
+			(LONG*)&this->hdr->videoBufferState.bufferStates[curReadPtr],
+			BufferState_InUse,
+			BufferState_Filled) == BufferState_Filled)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	bool TryLockNextFrame(FrameLockInfo& lockInfo)
+	{
+		int curReadPtr = this->hdr->videoBufferState.readPtr;
+		if (InterlockedCompareExchange(
+			(LONG*)&this->hdr->videoBufferState.bufferStates[curReadPtr],
+			BufferState_InUse,
+			BufferState_Filled) == BufferState_Filled)
+		{
+			lockInfo.frameNo = curReadPtr;
+			return true;
+		}
+
+		return false;
+	}
+	
+	void FreeLockedFrame(const FrameLockInfo& lockInfo)
+	{
+		if (lockInfo.frameNo != this->hdr->videoBufferState.readPtr)
+		{
+			throw std::runtime_error("inconsistent state");
+		}
+
+		if (this->hdr->videoBufferState.bufferStates[lockInfo.frameNo] != BufferState_InUse)
+		{
+			throw std::runtime_error("inconsistent buffer-state");
+		}
+
+		this->hdr->videoBufferState.bufferStates[lockInfo.frameNo] = BufferState_Free;
+		this->hdr->videoBufferState.readPtr = this->GetIncrementedReadPtr();
+	}
 
 	bool GetNextFrame(const std::function<void(const void* ptr)>& operationOnBuffer)
 	{

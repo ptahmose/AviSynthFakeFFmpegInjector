@@ -51,6 +51,9 @@
     <ClInclude Include="SharedMemHelper.h">
       <Filter>Header Files\com</Filter>
     </ClInclude>
+    <ClInclude Include="SharedMemManager.h">
+      <Filter>Header Files\com</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SharedMemHelper.cpp">
+      <Filter>Source Files\com</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedMemManager.cpp">
       <Filter>Source Files\com</Filter>
     </ClCompile>
   </ItemGroup>
