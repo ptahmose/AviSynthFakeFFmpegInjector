@@ -98,7 +98,13 @@ const char * avs_clip_get_error(AVS_Clip *) // return 0 if no error
 		return ss.str();
 	});
 
-	return 0;
+	// TODO: that's a way to report "end-of-file" or so - if we return an error, the encoding is stopped it seems
+
+	const char* szErrorText = "TESTTEXT";
+
+	szErrorText = nullptr;
+
+	return szErrorText;
 }
 
 AVS_ScriptEnvironment * avs_create_script_environment(int version)
