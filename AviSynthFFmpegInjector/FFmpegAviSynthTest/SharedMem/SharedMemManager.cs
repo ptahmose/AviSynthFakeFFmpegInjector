@@ -111,7 +111,7 @@ namespace FFmpegAviSynthTest.SharedMem
         {
             var hdr = new SharedMemHdr();
             hdr.magic = SharedMemMagic;
-            hdr.videoInfo.pixelType = this.videoInfo.PixelType;
+            hdr.videoInfo.pixelType = (int)this.videoInfo.PixelType;
             hdr.videoInfo.width = (uint)this.videoInfo.Width;
             hdr.videoInfo.height = (uint)this.videoInfo.Height;
             hdr.videoInfo.stride = (uint)this.videoInfo.Stride;

@@ -49,25 +49,6 @@
             Process.Start(startInfo);
         }
 
-        [DllImport("kernel32.dll")]
-        static extern bool CreateSymbolicLink(
-            string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
-
-        enum SymbolicLink
-        {
-            File = 0,
-            Directory = 1
-        }
-
-        private void SymLinkAviSynthTest()
-        {
-            CreateSymbolicLink(
-                @"L:\temp\ffmpeg-4.0.2-win64-static\bin\avisynth.dll",
-                @"D:\Dev\GitHub\AviSynthFakeFFmpegInjector\AviSynthFFmpegInjector\Build\VS\x64\Debug\avisynth.dll",
-
-                SymbolicLink.File);
-        }
-
         private void CopyAviSynthDll()
         {
             // ffmpeg is employing a "safe DLL-load mechanism" - it only loads a DLL from the same directory the exe

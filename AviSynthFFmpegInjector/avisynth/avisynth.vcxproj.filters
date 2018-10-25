@@ -25,6 +25,12 @@
     <Filter Include="Source Files\com">
       <UniqueIdentifier>{c880e26b-65f9-4d5c-9e91-f0076cf5dad0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{0e1490f0-0353-46e8-889a-7867ee3eed50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{e4156fbb-ecf7-4bf7-baca-92a78b425c33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -54,6 +60,9 @@
     <ClInclude Include="SharedMemManager.h">
       <Filter>Header Files\com</Filter>
     </ClInclude>
+    <ClInclude Include="hptimer.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -76,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="SharedMemManager.cpp">
       <Filter>Source Files\com</Filter>
+    </ClCompile>
+    <ClCompile Include="hptimer.cpp">
+      <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

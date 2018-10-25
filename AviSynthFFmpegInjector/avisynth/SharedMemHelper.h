@@ -1,5 +1,6 @@
 #pragma once
 #include "sharedmemstructures.h"
+#include "hptimer.h"
 #include <stdexcept>
 #include <functional>
 #include <stdexcept>
@@ -14,6 +15,14 @@ class SharedMemHelperReader
 private:
 	SharedMemHdr* hdr;
 public:
+
+	/// <summary>
+	/// Constructor for the SharedMemHelperReader. It is assumed that the pointer to the SharedMemHdr-struct
+	/// remains valid for the lifetime of this object.
+	/// </summary>
+	/// <exception cref="std::invalid_argument">Thrown when an invalid argument error condition
+	/// occurs.</exception>
+	/// <param name="hdr">[in,out] If non-null, the header.</param>
 	SharedMemHelperReader(SharedMemHdr* hdr) : hdr(hdr)
 	{
 		if (hdr->magic != SharedMemMagic)
@@ -25,6 +34,55 @@ public:
 	const SharedMemVideoInfo& GetVideoInfo()
 	{
 		return this->hdr->videoInfo;
+	}
+
+	bool TryLockNextFrameWithTightLoopAndSlowLoop(FrameLockInfo& lockInfo, uint32_t maxWaitTightLoop, uint32_t maxWaitSlowLoop)
+	{
+		bool b = this->TryLockNextFrameWithTimeout(lockInfo, maxWaitTightLoop);
+
+		HpTimer timer;
+		for (;;)
+		{
+			Sleep(1);
+			b = this->TryLockNextFrame(lockInfo);
+			if (b == true)
+			{
+				return b;
+			}
+
+			if (timer.GetElapsedTime() >= maxWaitSlowLoop)
+			{
+				return false;
+			}
+		}
+	}
+
+	bool TryLockNextFrameWithTimeout(FrameLockInfo& lockInfo, uint32_t maxWait)
+	{
+		bool b = this->TryLockNextFrame(lockInfo);
+		if (b == true)
+		{
+			return b;
+		}
+
+		if (maxWait > 0)
+		{
+			HpTimer timer;
+			for (;;)
+			{
+				b = this->TryLockNextFrame(lockInfo);
+				if (b == true)
+				{
+					return b;
+				}
+
+				YieldProcessor();
+				if (timer.GetElapsedTime() >= maxWait)
+				{
+					return false;
+				}
+			}
+		}
 	}
 
 	bool IsNextFrameAvailable()
@@ -61,7 +119,7 @@ public:
 		const void* ptr = ((const char*)this->hdr) + this->hdr->videoBufferInfo.offset[lockInfo.frameNo];
 		return ptr;
 	}
-	
+
 	void FreeLockedFrame(const FrameLockInfo& lockInfo)
 	{
 		if (lockInfo.frameNo != this->hdr->videoBufferState.readPtr)
@@ -101,7 +159,7 @@ public:
 	{
 		int rp = this->hdr->videoBufferState.readPtr;
 		rp++;
-		if (rp>=this->hdr->videoBufferInfo.videoBufferCount)
+		if (rp >= this->hdr->videoBufferInfo.videoBufferCount)
 		{
 			rp = 0;
 		}

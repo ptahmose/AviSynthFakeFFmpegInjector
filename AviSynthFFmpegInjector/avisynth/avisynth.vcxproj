@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="avisynth_c.h" />
     <ClInclude Include="extFunc.h" />
+    <ClInclude Include="hptimer.h" />
     <ClInclude Include="importexport.h" />
     <ClInclude Include="SharedMemHelper.h" />
     <ClInclude Include="SharedMemManager.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="avisynth.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="extFunc.cpp" />
+    <ClCompile Include="hptimer.cpp" />
     <ClCompile Include="SharedMemHelper.cpp" />
     <ClCompile Include="SharedMemManager.cpp" />
     <ClCompile Include="stdafx.cpp">

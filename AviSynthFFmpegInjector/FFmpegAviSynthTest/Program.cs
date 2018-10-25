@@ -53,7 +53,7 @@
         {
             var videoInfo = new SmVideoInfo()
             {
-                PixelType = (int)SmPixelTypes.Bgr24,
+                PixelType = SmPixelTypes.Bgr24,
                 Width = 1920,
                 Height = 1080,
                 Stride = 1920 * 3,
@@ -99,7 +99,7 @@
         {
             var videoInfo = new SmVideoInfo()
             {
-                PixelType = (int)SmPixelTypes.Bgr24,
+                PixelType = SmPixelTypes.Bgr24,
                 Width = 1920,
                 Height = 1080,
                 Stride = 1920 * 3,

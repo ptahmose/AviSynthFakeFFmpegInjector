@@ -2,7 +2,7 @@
 {
     public class SmVideoInfo
     {
-        public int PixelType { get; set; }
+        public SmPixelTypes PixelType { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public int Stride { get; set; }
