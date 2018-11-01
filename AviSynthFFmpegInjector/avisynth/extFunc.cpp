@@ -6,6 +6,7 @@
 #include "avisynth_c.h"
 #include "SharedMemHelper.h"
 #include "SharedMemManager.h"
+#include "avsclipobj.h"
 
 using namespace std;
 
@@ -117,6 +118,8 @@ AVS_ScriptEnvironment * avs_create_script_environment(int version)
 		return ss.str();
 	});
 
+	MessageBoxA(HWND_DESKTOP, "Waiting for Debugger to attach", "Waiting...", MB_OK);
+
 	if (version != 3)
 	{
 		//set_avs_lasterror()
@@ -211,6 +214,9 @@ AVS_Value avs_invoke(AVS_ScriptEnvironment *, const char * name, AVS_Value args,
 		{
 			return avs_new_value_error("Unexpected argument.");
 		}
+
+		AvsClipObj* clip = new AvsClipObj();
+		clip->InitFromFile(avs_as_string(args));
 
 		// now we have to return a "clip"
 		AVS_Value v = { 0 };

@@ -40,6 +40,7 @@ public:
 	{
 		bool b = this->TryLockNextFrameWithTimeout(lockInfo, maxWaitTightLoop);
 
+		// TODO: would "WaitOnAddress" work here? ( https://docs.microsoft.com/en-us/windows/desktop/api/synchapi/nf-synchapi-waitonaddress )
 		HpTimer timer;
 		for (;;)
 		{

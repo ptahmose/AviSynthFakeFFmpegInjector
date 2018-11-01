@@ -32,7 +32,10 @@
             //@"D:\Dev\GitHub\AviSynthFakeFFmpegInjector\AviSynthFFmpegInjector\Build\VS\x64\Debug\ffmpeg.exe";
             startInfo.Arguments =
                 //@" -v info -i SCRIPT.avs -aspect 16:9 -c:v h264_nvenc -rc constqp -preset hq OUT.mp4";
+
                 @" -v info -i D:\Dev\GitHub\AviSynthFakeFFmpegInjector\AviSynthFFmpegInjector\Build\VS\x64\Debug\SCRIPT.avs -aspect 16:9 -c:v h264_qsv -rc constqp -preset medium OUT.mp4";
+                //@" -v info -i - -aspect 16:9 -c:v h264_qsv -rc constqp -preset medium OUT.mp4";
+
             // for intel, possible presets: veryfast, faster, fast, medium, slow, slower, veryslow  (https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/cloud-computing-quicksync-video-ffmpeg-white-paper.pdf)
             /* startInfo.WorkingDirectory =
                  @"D:\Dev\GitHub\AviSynthFakeFFmpegInjector\AviSynthFFmpegInjector\Build\VS\x64\Debug\";*/

@@ -7,7 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "avisynth", "avisynth\avisyn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFmpegAviSynthTest", "FFmpegAviSynthTest\FFmpegAviSynthTest.csproj", "{B631B4A1-60F3-4C7D-977B-4388B547220E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFmpegAviSynthLib", "FFmpegAviSynthLib\FFmpegAviSynthLib.csproj", "{429163E2-7138-47C5-8B91-D5E6D31B141F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFmpegAviSynthLib", "FFmpegAviSynthLib\FFmpegAviSynthLib.csproj", "{429163E2-7138-47C5-8B91-D5E6D31B141F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFmpegAviSynthLibTests", "FFmpegAviSynthLibTests\FFmpegAviSynthLibTests.csproj", "{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,18 @@ Global
 		{429163E2-7138-47C5-8B91-D5E6D31B141F}.Release|x64.Build.0 = Release|Any CPU
 		{429163E2-7138-47C5-8B91-D5E6D31B141F}.Release|x86.ActiveCfg = Release|Any CPU
 		{429163E2-7138-47C5-8B91-D5E6D31B141F}.Release|x86.Build.0 = Release|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Debug|x64.Build.0 = Debug|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Release|x64.ActiveCfg = Release|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Release|x64.Build.0 = Release|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{083F2BA3-67FF-4A89-9E35-9A1FBB1607CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

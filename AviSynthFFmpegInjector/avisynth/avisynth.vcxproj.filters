@@ -31,6 +31,12 @@
     <Filter Include="Source Files\utils">
       <UniqueIdentifier>{e4156fbb-ecf7-4bf7-baca-92a78b425c33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\avisynth">
+      <UniqueIdentifier>{81ad01f3-41f4-4618-88ac-a76602ccf158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\avisynth">
+      <UniqueIdentifier>{5bfddc00-b8a3-432e-9341-1375c23002d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -63,6 +69,12 @@
     <ClInclude Include="hptimer.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="avsclipobj.h">
+      <Filter>Header Files\avisynth</Filter>
+    </ClInclude>
+    <ClInclude Include="avsException.h">
+      <Filter>Header Files\avisynth</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -88,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="hptimer.cpp">
       <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="avsclipobj.cpp">
+      <Filter>Source Files\avisynth</Filter>
+    </ClCompile>
+    <ClCompile Include="avsException.cpp">
+      <Filter>Source Files\avisynth</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

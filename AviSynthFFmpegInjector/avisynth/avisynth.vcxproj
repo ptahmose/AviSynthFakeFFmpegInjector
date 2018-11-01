@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{773AAB6D-11C5-4D0C-A7B2-E43EF2F4D22A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -106,6 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;AVISYNTH_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,6 +155,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="avisynth_c.h" />
+    <ClInclude Include="avsclipobj.h" />
+    <ClInclude Include="avsException.h" />
     <ClInclude Include="extFunc.h" />
     <ClInclude Include="hptimer.h" />
     <ClInclude Include="importexport.h" />
@@ -162,6 +169,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="avisynth.cpp" />
+    <ClCompile Include="avsclipobj.cpp" />
+    <ClCompile Include="avsException.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="extFunc.cpp" />
     <ClCompile Include="hptimer.cpp" />
