@@ -83,8 +83,8 @@ void AvsClipObj::InitializeSharedMem()
 	this->avsVideoInfo.fps_denominator = sharedMemHdr->videoInfo.fps_denominator;
 	this->avsVideoInfo.pixel_type = sharedMemHdr->videoInfo.pixelType;// AVS_CS_BGR24;
 	this->avsVideoInfo.audio_samples_per_second = 0;
-	this->avsVideoInfo.num_frames = 1000 * 10;
-
+	this->avsVideoInfo.num_frames = sharedMemHdr->videoInfo.numberOfFrames > 0 ?
+		sharedMemHdr->videoInfo.numberOfFrames : (numeric_limits<uint32_t>::max)();
 
 	this->pSmMan = upSmMan.release();
 	this->pSmHelper = upSmHlp.release();

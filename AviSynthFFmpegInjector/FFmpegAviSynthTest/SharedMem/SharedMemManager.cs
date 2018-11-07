@@ -22,6 +22,8 @@ namespace FFmpegAviSynthTest.SharedMem
 
         private MemoryMappedViewAccessor viewAccessor;
 
+        private int numberOfFrames;
+
         public SharedMemManager(SmVideoInfo videoInfo, int bufferCnt, string mapName)
         {
             this.videoInfo = videoInfo;
@@ -43,11 +45,13 @@ namespace FFmpegAviSynthTest.SharedMem
             //view.SafeMemoryMappedViewHandle.ReleasePointer();
         }
 
-        public void Initialize()
+        public void Initialize(int numberOfFrames)
         {
             long totalSize = this.offsetBitmaps.Last() + this.sizeOfBitmap;
             var mmf = MemoryMappedFile.CreateNew(this.mapName, totalSize);
             var viewAccessor = mmf.CreateViewAccessor();
+
+            this.numberOfFrames = Math.Max(0, numberOfFrames);
 
             var hdr = this.CreateInitialSharedMemHdr();
             viewAccessor.Write(0, ref hdr);
@@ -117,6 +121,7 @@ namespace FFmpegAviSynthTest.SharedMem
             hdr.videoInfo.stride = (uint)this.videoInfo.Stride;
             hdr.videoInfo.fps_denominator = (uint)this.videoInfo.Fps_denominator;
             hdr.videoInfo.fps_numerator = (uint)this.videoInfo.Fps_numerator;
+            hdr.videoInfo.numberOfFrames = (uint)this.numberOfFrames;
 
             hdr.videoBufferInfo.videoBufferCount = this.offsetBitmaps.Count;
             for (int i = 0; i < this.offsetBitmaps.Count; ++i)
@@ -195,6 +200,8 @@ namespace FFmpegAviSynthTest.SharedMem
 
             public UInt32 fps_numerator;
             public UInt32 fps_denominator;
+
+            public UInt32 numberOfFrames;
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

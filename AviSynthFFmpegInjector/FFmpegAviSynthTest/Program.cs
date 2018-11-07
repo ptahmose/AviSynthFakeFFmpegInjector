@@ -62,7 +62,7 @@
                 Fps_denominator = 1
             };
             var smm = new SharedMemManager(videoInfo, 2, "SHAREDMEMTEST");
-            smm.Initialize();
+            smm.Initialize(500);
 
             StartFfmpeg();
 
@@ -108,7 +108,7 @@
                 Fps_denominator = 1
             };
             var smm = new SharedMemManager(videoInfo, 2, "SHAREDMEMTEST");
-            smm.Initialize();
+            smm.Initialize(-1);
         }
 
         static void Main(string[] args)

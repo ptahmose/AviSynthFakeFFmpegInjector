@@ -14,6 +14,11 @@ struct SharedMemVideoInfo
 
 	std::uint32_t	fps_numerator;
 	std::uint32_t	fps_denominator;
+
+	/// <summary>
+	/// Specifies the number of frames that will be added. 0 means "undetermined number of frames".
+	/// </summary>
+	std::uint32_t	numberOfFrames;	
 };
 
 const int BufferState_InUse = 1;
