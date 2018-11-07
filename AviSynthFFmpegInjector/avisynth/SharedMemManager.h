@@ -12,7 +12,7 @@ private:
 public:
 	SharedMemManager(const char* shMemName);
 
-	void Initialize();
+	bool Initialize();
 
 	SharedMemHdr* GetSharedMemHdrPointer() { return (SharedMemHdr*)this->ptrShMem; }
 };

@@ -31,5 +31,5 @@ std::uint32_t HpTimer::GetElapsedTime()
 
 	auto diff = ((now.QuadPart - this->startCounter) * 1000) / HpTimer::perfCounterFreq;
 
-	return (uint32_t)(std::max)(diff, (LONGLONG)(numeric_limits<uint32_t>::max)());
+	return (uint32_t)(std::min)(diff, (LONGLONG)(numeric_limits<uint32_t>::max)());
 }

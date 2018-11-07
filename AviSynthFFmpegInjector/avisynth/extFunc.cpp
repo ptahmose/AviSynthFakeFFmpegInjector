@@ -8,6 +8,7 @@
 #include "SharedMemManager.h"
 #include "avsclipobj.h"
 
+#if 0
 using namespace std;
 
 struct AVS_ScriptEnvironment
@@ -376,3 +377,4 @@ int avs_is_planar_rgba(const AVS_VideoInfo * p)
 	return 0;
 }
 
+#endif

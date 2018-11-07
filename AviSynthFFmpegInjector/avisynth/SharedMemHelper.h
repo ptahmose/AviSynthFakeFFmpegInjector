@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <functional>
 #include <stdexcept>
+#include <cstdint>
 
 struct FrameLockInfo
 {
@@ -14,6 +15,8 @@ class SharedMemHelperReader
 {
 private:
 	SharedMemHdr* hdr;
+
+	SharedMemHelperReader() {};
 public:
 
 	/// <summary>
@@ -31,6 +34,8 @@ public:
 		}
 	}
 
+	bool Probe();
+
 	const SharedMemVideoInfo& GetVideoInfo()
 	{
 		return this->hdr->videoInfo;
@@ -39,6 +44,10 @@ public:
 	bool TryLockNextFrameWithTightLoopAndSlowLoop(FrameLockInfo& lockInfo, uint32_t maxWaitTightLoop, uint32_t maxWaitSlowLoop)
 	{
 		bool b = this->TryLockNextFrameWithTimeout(lockInfo, maxWaitTightLoop);
+		if (b == true)
+		{
+			return b;
+		}
 
 		// TODO: would "WaitOnAddress" work here? ( https://docs.microsoft.com/en-us/windows/desktop/api/synchapi/nf-synchapi-waitonaddress )
 		HpTimer timer;
@@ -167,4 +176,8 @@ public:
 
 		return rp;
 	}
+
+private:
+	static bool IsValidPixelType(int pixelType);
+	static bool IsStrideValid(int pixelType, std::uint32_t width, std::uint32_t stride);
 };

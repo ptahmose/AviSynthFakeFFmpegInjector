@@ -2,8 +2,11 @@
 
 #include "importexport.h"
 
-struct AVS_ScriptEnvironment;
-struct AVS_Clip;
+typedef void AVS_ScriptEnvironment;
+typedef void AVS_Clip;
+
+//struct AVS_ScriptEnvironment;
+//struct AVS_Clip;
 
 typedef unsigned char   AVSI_BYTE;
 

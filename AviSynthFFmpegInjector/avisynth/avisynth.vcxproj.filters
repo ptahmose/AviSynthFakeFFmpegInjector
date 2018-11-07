@@ -75,6 +75,18 @@
     <ClInclude Include="avsException.h">
       <Filter>Header Files\avisynth</Filter>
     </ClInclude>
+    <ClInclude Include="avsImportedObj.h">
+      <Filter>Header Files\avisynth</Filter>
+    </ClInclude>
+    <ClInclude Include="avsScriptEnvironment.h">
+      <Filter>Header Files\avisynth</Filter>
+    </ClInclude>
+    <ClInclude Include="avsvideoframe.h">
+      <Filter>Header Files\avisynth</Filter>
+    </ClInclude>
+    <ClInclude Include="avisynthHelpers.h">
+      <Filter>Header Files\avisynth</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -105,6 +117,18 @@
       <Filter>Source Files\avisynth</Filter>
     </ClCompile>
     <ClCompile Include="avsException.cpp">
+      <Filter>Source Files\avisynth</Filter>
+    </ClCompile>
+    <ClCompile Include="avsImportedObj.cpp">
+      <Filter>Source Files\avisynth</Filter>
+    </ClCompile>
+    <ClCompile Include="extFunc2.cpp">
+      <Filter>Source Files\external</Filter>
+    </ClCompile>
+    <ClCompile Include="avsScriptEnvironment.cpp">
+      <Filter>Source Files\avisynth</Filter>
+    </ClCompile>
+    <ClCompile Include="avisynthHelpers.cpp">
       <Filter>Source Files\avisynth</Filter>
     </ClCompile>
   </ItemGroup>

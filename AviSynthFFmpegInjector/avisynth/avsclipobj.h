@@ -1,8 +1,11 @@
 #pragma once
 
 #include <string>
+#include "extFunc.h"
+#include "avsvideoframe.h"
 
 class SharedMemManager;
+class SharedMemHelperReader;
 
 class AvsClipObj
 {
@@ -17,12 +20,20 @@ private:
 	State state;
 
 private:
+	AVS_VideoInfo avsVideoInfo;
+
+private:
+	int curVideoFrameNo;
+
+	AVSVideoFrameEx videoFrame;
+private:
 	static std::string SectionSharedMem; 
 	static std::string Name_SharedMemName;
 	std::string sharedMemName;
 	std::string lastError;
 private:
 	SharedMemManager* pSmMan;
+	SharedMemHelperReader* pSmHelper;
 public:
 	AvsClipObj();
 
@@ -31,6 +42,14 @@ public:
 	void InitializeSharedMem();
 
 	void ClearLastError();
+
+	const AVS_VideoInfo* GetVideoInfo(int streamNo);
+
+	AVSVideoFrameEx* GetVideoFrame(int n);
+
+	const void* GetCurVideoFramePointer(const AVSVideoFrameEx* vf);
+	int GetCurVideoFrameStride(const AVSVideoFrameEx* vf);
+	void ReleaseCurVideoFrame();
 
 	/// <summary>
 	/// Gets the "last error string" if there is one. Otherwise, returns nullptr.
@@ -44,6 +63,9 @@ public:
 	/// </returns>
 	const char* GetLastError() const;
 
+	void SetLastError(const char* sz);
+	void SetLastError(const std::string& s) { this->SetLastError(s.c_str()); }
 private:
 	void ThrowIfStateIsNot(State state);
+	bool CheckIfVideoFrameIsCurrentOne(const AVSVideoFrameEx* vf);
 };

@@ -154,9 +154,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="avisynthHelpers.h" />
     <ClInclude Include="avisynth_c.h" />
     <ClInclude Include="avsclipobj.h" />
     <ClInclude Include="avsException.h" />
+    <ClInclude Include="avsImportedObj.h" />
+    <ClInclude Include="avsScriptEnvironment.h" />
+    <ClInclude Include="avsvideoframe.h" />
     <ClInclude Include="extFunc.h" />
     <ClInclude Include="hptimer.h" />
     <ClInclude Include="importexport.h" />
@@ -169,10 +173,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="avisynth.cpp" />
+    <ClCompile Include="avisynthHelpers.cpp" />
     <ClCompile Include="avsclipobj.cpp" />
     <ClCompile Include="avsException.cpp" />
+    <ClCompile Include="avsImportedObj.cpp" />
+    <ClCompile Include="avsScriptEnvironment.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="extFunc.cpp" />
+    <ClCompile Include="extFunc2.cpp" />
     <ClCompile Include="hptimer.cpp" />
     <ClCompile Include="SharedMemHelper.cpp" />
     <ClCompile Include="SharedMemManager.cpp" />

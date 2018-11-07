@@ -10,7 +10,19 @@ public:
 	{
 		ErrorInvalidState,
 		ErrorReadingAvsFileIOError,
-		ErrorReadingAvsFileInvalidData
+		ErrorReadingAvsFileInvalidData,
+
+		/// <summary>
+		/// An enum constant representing that there was an error opening the shared-memory.
+		/// </summary>
+		ErrorInitalizingSharedMemory,
+
+		/// <summary>
+		/// An enum constant representing the error that the shared memory contains invalid data.
+		/// </summary>
+		ErrorSharedMemoryInvalid,
+
+		ErrorProbingSharedMemory
 	};
 private:
 	Reason	reason;
