@@ -116,7 +116,7 @@ const AVS_VideoInfo* AvsClipObj::GetVideoInfo(int streamNo)
 AVSVideoFrameEx* AvsClipObj::GetVideoFrame(int n)
 {
 	// TODO: check state
-	
+
 	if (n != this->curVideoFrameNo)
 	{
 		stringstream ss;
@@ -127,13 +127,23 @@ AVSVideoFrameEx* AvsClipObj::GetVideoFrame(int n)
 
 	// wait until next frame is available
 	FrameLockInfo frameLockInfo;
-	bool b = this->pSmHelper->TryLockNextFrameWithTightLoopAndSlowLoop(frameLockInfo, 10, 30 * 1000);
-	if (b == false)
+	SharedMemHelperReader::LockFrameRetcode rc = this->pSmHelper->TryLockNextFrameWithTightLoopAndSlowLoop(frameLockInfo, 10, 30 * 1000);
+	switch (rc)
+	{
+	case SharedMemHelperReader::LockFrameRetcode::Timeout:
 	{
 		stringstream ss;
 		ss << "Timeout while waiting for next frame";
 		this->SetLastError(ss.str());
 		return nullptr;
+	}
+	case SharedMemHelperReader::LockFrameRetcode::EndOfStream:
+	{
+		stringstream ss;
+		ss << "End-of-stream encountered";
+		this->SetLastError(ss.str());
+		return nullptr;
+	}
 	}
 
 	this->videoFrame.frameLockInfo = frameLockInfo;

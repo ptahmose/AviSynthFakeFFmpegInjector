@@ -18,6 +18,14 @@ private:
 
 	SharedMemHelperReader() {};
 public:
+	enum class LockFrameRetcode
+	{
+		Timeout,
+		EndOfStream,
+		Ok
+	};
+
+public:
 
 	/// <summary>
 	/// Constructor for the SharedMemHelperReader. It is assumed that the pointer to the SharedMemHdr-struct
@@ -41,12 +49,12 @@ public:
 		return this->hdr->videoInfo;
 	}
 
-	bool TryLockNextFrameWithTightLoopAndSlowLoop(FrameLockInfo& lockInfo, uint32_t maxWaitTightLoop, uint32_t maxWaitSlowLoop)
+	LockFrameRetcode TryLockNextFrameWithTightLoopAndSlowLoop(FrameLockInfo& lockInfo, uint32_t maxWaitTightLoop, uint32_t maxWaitSlowLoop)
 	{
-		bool b = this->TryLockNextFrameWithTimeout(lockInfo, maxWaitTightLoop);
-		if (b == true)
+		LockFrameRetcode rc = this->TryLockNextFrameWithTimeout(lockInfo, maxWaitTightLoop);
+		if (rc == LockFrameRetcode::Timeout)
 		{
-			return b;
+			return rc;
 		}
 
 		// TODO: would "WaitOnAddress" work here? ( https://docs.microsoft.com/en-us/windows/desktop/api/synchapi/nf-synchapi-waitonaddress )
@@ -54,47 +62,60 @@ public:
 		for (;;)
 		{
 			Sleep(1);
-			b = this->TryLockNextFrame(lockInfo);
+			if (this->IsEndOfStream())
+			{
+				return LockFrameRetcode::EndOfStream;
+			}
+
+			bool b = this->TryLockNextFrame(lockInfo);
 			if (b == true)
 			{
-				return b;
+				return LockFrameRetcode::Ok;
 			}
 
 			if (timer.GetElapsedTime() >= maxWaitSlowLoop)
 			{
-				return false;
+				return LockFrameRetcode::Timeout;
 			}
 		}
 	}
 
-	bool TryLockNextFrameWithTimeout(FrameLockInfo& lockInfo, uint32_t maxWait)
+	LockFrameRetcode TryLockNextFrameWithTimeout(FrameLockInfo& lockInfo, uint32_t maxWait)
 	{
 		bool b = this->TryLockNextFrame(lockInfo);
 		if (b == true)
 		{
-			return b;
+			// if there is a frame immediately available, we always want to return OK
+			return LockFrameRetcode::Ok;
 		}
+
+		// otherwise, we also check for "End-Of-Stream"
 
 		if (maxWait > 0)
 		{
 			HpTimer timer;
 			for (;;)
 			{
+				if (this->IsEndOfStream())
+				{
+					return LockFrameRetcode::EndOfStream;
+				}
+
 				b = this->TryLockNextFrame(lockInfo);
 				if (b == true)
 				{
-					return b;
+					return LockFrameRetcode::Ok;
 				}
 
 				YieldProcessor();
 				if (timer.GetElapsedTime() >= maxWait)
 				{
-					return false;
+					return LockFrameRetcode::Timeout;
 				}
 			}
 		}
 
-		return false;
+		return LockFrameRetcode::Timeout;
 	}
 
 	bool IsNextFrameAvailable()
@@ -104,6 +125,17 @@ public:
 			(LONG*)&this->hdr->videoBufferState.bufferStates[curReadPtr],
 			BufferState_InUse,
 			BufferState_Filled) == BufferState_Filled)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	bool IsEndOfStream()
+	{
+		volatile const int* ptrEndOfStream = &this->hdr->control.endOfStreamReached;
+		if (*ptrEndOfStream != 0)
 		{
 			return true;
 		}

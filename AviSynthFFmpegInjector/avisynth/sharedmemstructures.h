@@ -39,9 +39,22 @@ struct BufferState
 	int bufferStates[MAX_VIDEO_BUFFERS];
 };
 
+struct ControlData
+{
+	/// <summary>
+	/// A value different to 0 means that the end of the stream was reached.
+	/// If this value is set to something different to 0, it must not be reset again.
+	/// </summary>
+	int endOfStreamReached;	
+
+	std::uint32_t timeOutForWaitingForFrame;
+};
+
 struct SharedMemHdr
 {
 	GUID	magic;
+
+	ControlData control;
 
 	SharedMemVideoInfo	videoInfo;
 

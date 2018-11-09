@@ -86,13 +86,18 @@ namespace FFmpegAviSynthTest.SharedMem
             }
         }
 
+        public void SignalEndOfStream()
+        {
+
+        }
+
         private unsafe ref int GetBufferStateAtWritePointer(byte* ptr)
         {
             SharedMemHdr* hdr = (SharedMemHdr*)ptr;
             return ref hdr->videoBufferState.bufferStates[hdr->videoBufferState.writePtr];
         }
 
-        private unsafe  void IncrementWritePtr(byte* ptr)
+        private unsafe void IncrementWritePtr(byte* ptr)
         {
             SharedMemHdr* hdr = (SharedMemHdr*)ptr;
             int wp = hdr->videoBufferState.writePtr + 1;
@@ -115,6 +120,8 @@ namespace FFmpegAviSynthTest.SharedMem
         {
             var hdr = new SharedMemHdr();
             hdr.magic = SharedMemMagic;
+            hdr.control.endOfStreamReached = 0;
+            hdr.control.timeOutForWaitingForFrame = 10 * 1000;
             hdr.videoInfo.pixelType = (int)this.videoInfo.PixelType;
             hdr.videoInfo.width = (uint)this.videoInfo.Width;
             hdr.videoInfo.height = (uint)this.videoInfo.Height;
@@ -209,7 +216,7 @@ namespace FFmpegAviSynthTest.SharedMem
         {
             public int videoBufferCount;
             public fixed UInt32 offset[MAX_VIDEO_BUFFERS];
-        };
+        }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         unsafe struct BufferState
@@ -218,17 +225,27 @@ namespace FFmpegAviSynthTest.SharedMem
             public int writePtr;
 
             public fixed int bufferStates[MAX_VIDEO_BUFFERS];
-        };
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        unsafe struct ControlData
+        {
+            public int endOfStreamReached;
+
+            public UInt32 timeOutForWaitingForFrame;
+        }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         struct SharedMemHdr
         {
             public Guid magic;
 
+            public ControlData control;
+
             public SharedMemVideoInfo videoInfo;
 
             public VideoBufferInfo videoBufferInfo;
             public BufferState videoBufferState;
-        };
+        }
     }
 }
