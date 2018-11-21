@@ -52,7 +52,7 @@ public:
 	LockFrameRetcode TryLockNextFrameWithTightLoopAndSlowLoop(FrameLockInfo& lockInfo, uint32_t maxWaitTightLoop, uint32_t maxWaitSlowLoop)
 	{
 		LockFrameRetcode rc = this->TryLockNextFrameWithTimeout(lockInfo, maxWaitTightLoop);
-		if (rc == LockFrameRetcode::Timeout)
+		if (rc != LockFrameRetcode::Timeout)
 		{
 			return rc;
 		}

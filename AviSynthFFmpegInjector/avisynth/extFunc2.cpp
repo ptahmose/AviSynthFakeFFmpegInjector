@@ -49,7 +49,7 @@ AVS_Value avs_invoke(AVS_ScriptEnvironment* p, const char * name, AVS_Value args
 		[=](void)->string
 	{
 		stringstream ss;
-		ss << "Entered \"avs_invoke( [env], " << name << ", args, arg_names )";
+		ss << "Entered \"avs_invoke( [env], " << name << ", args, arg_names )\"" << endl;
 		return ss.str();
 	});
 
@@ -103,7 +103,7 @@ int avs_get_audio(AVS_Clip *, void * buf, INT64 start, INT64 count)
 	return 0;
 }
 
-const char * avs_get_error(AVS_ScriptEnvironment* ) // return 0 if no error
+const char * avs_get_error(AVS_ScriptEnvironment*) // return 0 if no error
 {
 	return 0;
 }
@@ -280,7 +280,7 @@ int avs_get_pitch_p(const AVS_VideoFrame * p, int plane)
 const BYTE* avs_get_read_ptr_p(const AVS_VideoFrame * p, int plane)
 {
 	AVSVideoFrameEx* vf = (AVSVideoFrameEx*)p;
-	return (const BYTE*) vf->clipObj->GetCurVideoFramePointer(vf);
+	return (const BYTE*)vf->clipObj->GetCurVideoFramePointer(vf);
 }
 
 int avs_get_row_size_p(const AVS_VideoFrame * p, int plane)
@@ -294,7 +294,7 @@ int avs_get_row_size_p(const AVS_VideoFrame * p, int plane)
 	});
 
 	AVSVideoFrameEx* vf = (AVSVideoFrameEx*)p;
-	auto vi =  vf->clipObj->GetVideoInfo(0);
+	auto vi = vf->clipObj->GetVideoInfo(0);
 	return CalcLengthOfRow(vi->width, vi->pixel_type);
 }
 
